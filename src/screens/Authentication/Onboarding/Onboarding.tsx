@@ -9,12 +9,11 @@ import {
     View,
 } from 'react-native';
 
-import Slide, { SLIDE_HEIGHT } from './Slide';
+import Slide, { SLIDE_HEIGHT, BORDER_RADIUS } from './Slide';
 import SubSlide from './SubSlide';
 import Dot from './Dot';
 import slides from '../../../../assets/data/slides';
 
-const BORDER_RADIUS = 75;
 const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({

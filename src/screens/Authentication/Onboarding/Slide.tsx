@@ -1,8 +1,10 @@
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { Dimensions, Image, ImageRequireSource, StyleSheet, View } from 'react-native';
 
+import { Text } from '../../../components';
 const { width, height } = Dimensions.get('window');
 export const SLIDE_HEIGHT = height * 0.61;
+export const BORDER_RADIUS = 75;
 
 const styles = StyleSheet.create({
     viewContainer: {
@@ -10,13 +12,8 @@ const styles = StyleSheet.create({
     },
     viewUnderlay: {
         ...StyleSheet.absoluteFillObject,
-        top: 70,
+        alignItems: 'center',
         justifyContent: 'flex-end',
-    },
-    imgUnderlay: {
-        ...StyleSheet.absoluteFillObject,
-        width: undefined,
-        height: undefined,
     },
     viewLabelContainer: {
         height: 100,
@@ -25,7 +22,7 @@ const styles = StyleSheet.create({
     txtLabel: {
         fontSize: 80,
         lineHeight: 80,
-        fontFamily: 'SFProText-Bold',
+        fontFamily: 'SFProDisplay-Bold',
         color: 'white',
         textAlign: 'center',
     },
@@ -33,7 +30,11 @@ const styles = StyleSheet.create({
 
 interface SlideProps {
     title: string;
-    picture: number;
+    picture: {
+        uri: ImageRequireSource;
+        width: number;
+        height: number;
+    };
     right?: boolean;
 }
 
@@ -46,10 +47,17 @@ const Slide = ({ title, picture, right }: SlideProps) => {
     return (
         <View style={styles.viewContainer}>
             <View style={styles.viewUnderlay}>
-                <Image source={picture} style={styles.imgUnderlay} resizeMode={'contain'} />
+                <Image
+                    source={picture.uri}
+                    style={{
+                        height: SLIDE_HEIGHT - BORDER_RADIUS,
+                        width: ((SLIDE_HEIGHT - BORDER_RADIUS) * picture.height) / picture.width,
+                    }}
+                    resizeMode={'contain'}
+                />
             </View>
             <View style={[styles.viewLabelContainer, { transform }]}>
-                <Text style={styles.txtLabel}>{title}</Text>
+                <Text variant={'verticalTitle'}>{title}</Text>
             </View>
         </View>
     );
