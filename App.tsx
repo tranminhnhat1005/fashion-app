@@ -1,12 +1,14 @@
 // In App.js in a new project
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
-import { LoadAssets } from './src/components';
-import { Onboarding, Welcome } from './src/screens/Authentication/';
 import { ThemeProvider } from '@shopify/restyle';
-import theme from './src/components/Theme';
+import * as React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { LoadAssets } from './src/components';
+import theme from './src/components/Theme';
+import { AuthenticationNavigator, assets as authenticationAssets } from './src/screens/Authentication/';
+
+const assets = [...authenticationAssets];
 const fonts = {
     'SFProDisplay-Bold': require('./assets/fonts/SF-Pro-Display-Bold.otf'),
     'SFProDisplay-Semibold': require('./assets/fonts/SF-Pro-Display-Semibold.otf'),
@@ -14,22 +16,13 @@ const fonts = {
     'SFProDisplay-Medium': require('./assets/fonts/SF-Pro-Display-Medium.otf'),
 };
 
-const AuthenticationStack = createNativeStackNavigator();
-
-const AuthenticationNavigator = () => {
-    return (
-        <AuthenticationStack.Navigator screenOptions={{ headerShown: false }}>
-            <AuthenticationStack.Screen name="Onboarding" component={Onboarding} />
-            <AuthenticationStack.Screen name="Welcome" component={Welcome} />
-        </AuthenticationStack.Navigator>
-    );
-};
-
 function App() {
     return (
         <ThemeProvider {...{ theme }}>
-            <LoadAssets {...{ fonts }}>
-                <AuthenticationNavigator />
+            <LoadAssets {...{ fonts, assets }}>
+                <SafeAreaProvider>
+                    <AuthenticationNavigator />
+                </SafeAreaProvider>
             </LoadAssets>
         </ThemeProvider>
     );

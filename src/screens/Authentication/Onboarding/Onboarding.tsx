@@ -7,13 +7,17 @@ import {
     ScrollView,
     StyleSheet,
     View,
+    Image,
 } from 'react-native';
 
-import Slide, { SLIDE_HEIGHT, BORDER_RADIUS } from './Slide';
+import Slide, { SLIDE_HEIGHT } from './Slide';
 import SubSlide from './SubSlide';
 import Dot from './Dot';
 import slides from '../../../../assets/data/slides';
+import { theme } from '../../../components';
+import { Routes, StackNavigationProps } from '../../../components/Navigation';
 
+export const assets = slides.map((slide) => slide.picture.uri);
 const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -23,11 +27,18 @@ const styles = StyleSheet.create({
     },
     viewSlider: {
         height: SLIDE_HEIGHT,
-        borderBottomRightRadius: BORDER_RADIUS,
+        borderBottomRightRadius: theme.borderRadii.xl,
+    },
+    viewUnderlay: {
+        ...StyleSheet.absoluteFillObject,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        borderBottomRightRadius: theme.borderRadii.xl,
+        overflow: 'hidden',
     },
     viewPagination: {
         ...StyleSheet.absoluteFillObject,
-        height: BORDER_RADIUS,
+        height: theme.borderRadii.xl,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -38,13 +49,13 @@ const styles = StyleSheet.create({
     viewFooterContent: {
         flex: 1,
         backgroundColor: 'white',
-        borderTopLeftRadius: BORDER_RADIUS,
+        borderTopLeftRadius: theme.borderRadii.xl,
     },
 });
 
 // type Props = {};
 
-const Onboarding = () => {
+const Onboarding = ({ navigation }: StackNavigationProps<Routes, 'Onboarding'>) => {
     const scroll = useRef<ScrollView>(null);
     const x = useRef(new Animated.Value(0)).current;
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -58,6 +69,25 @@ const Onboarding = () => {
     return (
         <View style={styles.viewContainer}>
             <Animated.View style={[styles.viewSlider, { backgroundColor }]}>
+                {slides.map(({ picture }, index) => {
+                    const opacity = x.interpolate({
+                        inputRange: [(index - 0.5) * width, index * width, (index + 0.5) * width],
+                        outputRange: [0, 1, 0],
+                        extrapolate: 'clamp',
+                    });
+                    return (
+                        <Animated.View style={[styles.viewUnderlay, { opacity }]} key={index}>
+                            <Image
+                                source={picture.uri}
+                                style={{
+                                    height: SLIDE_HEIGHT - theme.borderRadii.xl,
+                                    width: ((SLIDE_HEIGHT - theme.borderRadii.xl) * picture.height) / picture.width,
+                                }}
+                                resizeMode={'contain'}
+                            />
+                        </Animated.View>
+                    );
+                })}
                 <Animated.ScrollView
                     ref={scroll}
                     horizontal
@@ -89,18 +119,22 @@ const Onboarding = () => {
                             transform: [{ translateX: Animated.multiply(x, -1) }],
                         }}
                     >
-                        {slides.map(({ subtitle, description }, index) => (
-                            <SubSlide
-                                key={index}
-                                last={index === slides.length - 1}
-                                {...{ subtitle, description }}
-                                onPress={() => {
-                                    if (scroll.current) {
-                                        scroll.current.scrollTo({ x: width * (index + 1), animated: true });
-                                    }
-                                }}
-                            />
-                        ))}
+                        {slides.map(({ subtitle, description }, index) => {
+                            const last = index === slides.length - 1;
+                            return (
+                                <SubSlide
+                                    key={index}
+                                    onPress={() => {
+                                        if (last) {
+                                            navigation.navigate('Welcome');
+                                        } else {
+                                            scroll.current?.scrollTo({ x: width * (index + 1), animated: true });
+                                        }
+                                    }}
+                                    {...{ subtitle, description, last }}
+                                />
+                            );
+                        })}
                     </Animated.View>
                 </View>
             </View>

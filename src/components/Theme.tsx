@@ -1,4 +1,4 @@
-import { createText, createTheme } from '@shopify/restyle';
+import { createBox, createText, createTheme } from '@shopify/restyle';
 
 const palette = {
     purpleLight: '#8C6FF7',
@@ -12,9 +12,11 @@ const palette = {
     black: '#0B0B0B',
     white: '#FFFFFF',
     titleDark: '#0C0D34',
+    secondary: '#0C0D34',
     bodyDark: 'rgba(12, 13, 52, 0.7)',
     bodyLight: 'rgba(12, 13, 52, 0.05)',
     primary: '#2CB9B0',
+    gray: '#F4F0EF',
 };
 
 const theme = createTheme({
@@ -26,6 +28,8 @@ const theme = createTheme({
         bodyLight: palette.bodyLight,
         white: palette.white,
         primary: palette.primary,
+        gray: palette.gray,
+        secondary: palette.secondary,
     },
     spacing: {
         xs: 8,
@@ -34,7 +38,12 @@ const theme = createTheme({
         l: 24,
         xl: 40,
     },
-    borderRadii: {},
+    borderRadii: {
+        s: 4,
+        m: 10,
+        l: 22,
+        xl: 75,
+    },
     border: {},
     textVariants: {
         verticalTitle: {
@@ -67,12 +76,13 @@ const theme = createTheme({
             color: 'bodyDark',
             fontFamily: 'SFProDisplay-Medium',
             fontSize: 15,
-        }
+        },
     },
 });
 
 export type Theme = typeof theme;
 
+export const Box = createBox<Theme>();
 export const Text = createText<Theme>();
 Text.defaultProps = { variant: 'body' };
 

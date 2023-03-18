@@ -1,19 +1,13 @@
 import React from 'react';
-import { Dimensions, Image, ImageRequireSource, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 
 import { Text } from '../../../components';
 const { width, height } = Dimensions.get('window');
 export const SLIDE_HEIGHT = height * 0.61;
-export const BORDER_RADIUS = 75;
 
 const styles = StyleSheet.create({
     viewContainer: {
         width,
-    },
-    viewUnderlay: {
-        ...StyleSheet.absoluteFillObject,
-        alignItems: 'center',
-        justifyContent: 'flex-end',
     },
     viewLabelContainer: {
         height: 100,
@@ -30,15 +24,10 @@ const styles = StyleSheet.create({
 
 interface SlideProps {
     title: string;
-    picture: {
-        uri: ImageRequireSource;
-        width: number;
-        height: number;
-    };
     right?: boolean;
 }
 
-const Slide = ({ title, picture, right }: SlideProps) => {
+const Slide = ({ title, right }: SlideProps) => {
     const transform = [
         { translateY: (SLIDE_HEIGHT - 100) / 2 },
         { translateX: ((right ? 1 : -1) * (width - 100)) / 2 },
@@ -46,16 +35,6 @@ const Slide = ({ title, picture, right }: SlideProps) => {
     ];
     return (
         <View style={styles.viewContainer}>
-            <View style={styles.viewUnderlay}>
-                <Image
-                    source={picture.uri}
-                    style={{
-                        height: SLIDE_HEIGHT - BORDER_RADIUS,
-                        width: ((SLIDE_HEIGHT - BORDER_RADIUS) * picture.height) / picture.width,
-                    }}
-                    resizeMode={'contain'}
-                />
-            </View>
             <View style={[styles.viewLabelContainer, { transform }]}>
                 <Text variant={'verticalTitle'}>{title}</Text>
             </View>
