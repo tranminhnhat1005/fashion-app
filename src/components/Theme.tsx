@@ -17,6 +17,8 @@ const palette = {
     bodyLight: 'rgba(12, 13, 52, 0.05)',
     primary: '#2CB9B0',
     gray: '#F4F0EF',
+    grayDark: '#8A8D90',
+    danger: '#FF0058',
 };
 
 const theme = createTheme({
@@ -30,6 +32,8 @@ const theme = createTheme({
         primary: palette.primary,
         gray: palette.gray,
         secondary: palette.secondary,
+        grayDark: palette.grayDark,
+        danger: palette.danger,
     },
     spacing: {
         xs: 8,
